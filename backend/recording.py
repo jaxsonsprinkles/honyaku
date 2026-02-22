@@ -4,14 +4,14 @@ from scipy.signal import resample_poly
 from faster_whisper import WhisperModel
 import queue
 import threading
-import time
+from fugashi import Tagger
 
 CHUNK_SIZE = 4800
 BUFFER_SECONDS = 3
 
 
 model = WhisperModel("base", device="cpu", compute_type="int8")
-
+tagger = Tagger()
 
 try:
     wasapi_info = pyaudio.PyAudio().get_host_api_info_by_type(pyaudio.paWASAPI)
@@ -43,6 +43,7 @@ stream = pyaudio.PyAudio().open(
 )
 
 audio_queue = queue.Queue()
+transcript_queue = queue.Queue()
 
 
 def capture_audio():
@@ -80,7 +81,22 @@ def transcribe_loop():
 
             for segment in segments:
                 print("Transcript:", segment.text)
+                transcript_queue.put(segment.text)
+
+
+def tokenize():
+    tokens = []
+    while True:
+        text = transcript_queue.get()
+        for word in tagger(text):
+            tokens.append({
+                "surface": word.surface,
+                "lemma": word.feature.lemma,
+                "pos": word.feature.pos1
+            })
 
 
 threading.Thread(target=capture_audio, daemon=True).start()
+threading.Thread(target=tokenize, daemon=True).start()
+
 transcribe_loop()
