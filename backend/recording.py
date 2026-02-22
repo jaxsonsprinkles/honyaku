@@ -1,86 +1,86 @@
-# Code for recording from https://github.com/s0d3s/PyAudioWPatch/blob/master/examples/pawp_record_wasapi_loopback.py
-
-
 import pyaudiowpatch as pyaudio
-from google.cloud import speech
 import numpy as np
 from scipy.signal import resample_poly
+from faster_whisper import WhisperModel
+import queue
+import threading
+import time
 
 CHUNK_SIZE = 4800
-
-filename = "loopback_record.wav"
-
-client = speech.SpeechClient()
+BUFFER_SECONDS = 3
 
 
-with pyaudio.PyAudio() as p:
+model = WhisperModel("base", device="cpu", compute_type="int8")
 
-    try:
-        # Get default WASAPI info
-        wasapi_info = p.get_host_api_info_by_type(pyaudio.paWASAPI)
-    except OSError:
-        print("Looks like WASAPI is not available on the system. Exiting...")
+
+try:
+    wasapi_info = pyaudio.PyAudio().get_host_api_info_by_type(pyaudio.paWASAPI)
+except OSError:
+    print("WASAPI not available.")
+    exit()
+
+default_speakers = pyaudio.PyAudio().get_device_info_by_index(
+    wasapi_info["defaultOutputDevice"])
+
+if not default_speakers["isLoopbackDevice"]:
+    for loopback in pyaudio.PyAudio().get_loopback_device_info_generator():
+        if default_speakers["name"] in loopback["name"]:
+            default_speakers = loopback
+            break
+    else:
+        print("Loopback device not found.")
         exit()
 
-    # Get default WASAPI speakers
-    default_speakers = p.get_device_info_by_index(
-        wasapi_info["defaultOutputDevice"])
+sample_rate = int(default_speakers["defaultSampleRate"])
 
-    if not default_speakers["isLoopbackDevice"]:
-        for loopback in p.get_loopback_device_info_generator():
-            if default_speakers["name"] in loopback["name"]:
-                default_speakers = loopback
-                break
-        else:
-            print("Default loopback output device not found.\n\nRun `python -m pyaudiowpatch` to check available devices.\nExiting...\n")
-            exit()
-    sample_rate = int(default_speakers["defaultSampleRate"])
-    print(default_speakers)
+stream = pyaudio.PyAudio().open(
+    format=pyaudio.paInt16,
+    channels=default_speakers["maxInputChannels"],
+    rate=sample_rate,
+    frames_per_buffer=CHUNK_SIZE,
+    input=True,
+    input_device_index=default_speakers["index"],
+)
 
-    stream = p.open(format=pyaudio.paInt16,
-                    channels=default_speakers["maxInputChannels"],
-                    rate=sample_rate,
-                    frames_per_buffer=CHUNK_SIZE,
-                    input=True,
-                    input_device_index=default_speakers["index"],
-                    )
-
-    streaming_config = speech.StreamingRecognitionConfig(
-        config=speech.RecognitionConfig(
-            encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
-            sample_rate_hertz=16000,
-            language_code="ja-JP"
-        ),
-        interim_results=True,
-    )
-
-    def record():
-        def audio_generator():
-            while True:
-                data = stream.read(CHUNK_SIZE, exception_on_overflow=False)
-
-                audio = np.frombuffer(data, dtype=np.int16)
-
-                if default_speakers["maxInputChannels"] == 2:
-                    audio = audio.reshape(-1, 2)
-                    audio = audio.mean(axis=1)
-
-                num_samples = int(len(audio) * 16000 / sample_rate)
-                audio_resampled = resample_poly(audio, 1, 3)
-
-                audio_resampled = np.clip(audio_resampled, -32768, 32767)
-                audio_resampled = audio_resampled.astype(np.int16)
-
-                yield speech.StreamingRecognizeRequest(
-                    audio_content=audio_resampled.tobytes()
-                )
-
-        responses = client.streaming_recognize(
-            streaming_config, audio_generator())
-
-        for response in responses:
-            for result in response.results:
-                print("Transcript:", result.alternatives[0].transcript)
+audio_queue = queue.Queue()
 
 
-record()
+def capture_audio():
+    while True:
+        data = stream.read(CHUNK_SIZE, exception_on_overflow=False)
+        audio = np.frombuffer(data, dtype=np.int16)
+
+        if default_speakers["maxInputChannels"] == 2:
+            audio = audio.reshape(-1, 2).mean(axis=1)
+
+        audio = resample_poly(audio, 16000, sample_rate)
+
+        audio = audio.astype(np.float32) / 32768.0
+
+        audio_queue.put(audio)
+
+
+def transcribe_loop():
+    buffer = []
+    samples_per_buffer = 16000 * BUFFER_SECONDS
+
+    while True:
+        chunk = audio_queue.get()
+        buffer.extend(chunk)
+
+        if len(buffer) >= samples_per_buffer:
+            audio_data = np.array(buffer[:samples_per_buffer])
+            buffer = buffer[samples_per_buffer:]
+
+            segments, info = model.transcribe(
+                audio_data,
+                language="ja",
+                beam_size=5
+            )
+
+            for segment in segments:
+                print("Transcript:", segment.text)
+
+
+threading.Thread(target=capture_audio, daemon=True).start()
+transcribe_loop()
