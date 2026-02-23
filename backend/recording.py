@@ -2,16 +2,14 @@ import pyaudiowpatch as pyaudio
 import numpy as np
 from scipy.signal import resample_poly
 from faster_whisper import WhisperModel
-import queue
-import threading
-from fugashi import Tagger
+import asyncio
+
 
 CHUNK_SIZE = 4800
 BUFFER_SECONDS = 3
 
 
 model = WhisperModel("base", device="cpu", compute_type="int8")
-tagger = Tagger()
 
 try:
     wasapi_info = pyaudio.PyAudio().get_host_api_info_by_type(pyaudio.paWASAPI)
@@ -42,13 +40,13 @@ stream = pyaudio.PyAudio().open(
     input_device_index=default_speakers["index"],
 )
 
-audio_queue = queue.Queue()
-transcript_queue = queue.Queue()
+audio_queue = asyncio.Queue()
+transcript_queue = asyncio.Queue()
 
 
-def capture_audio():
+async def capture_audio():
     while True:
-        data = stream.read(CHUNK_SIZE, exception_on_overflow=False)
+        data = await asyncio.to_thread(stream.read, CHUNK_SIZE, exception_on_overflow=False)
         audio = np.frombuffer(data, dtype=np.int16)
 
         if default_speakers["maxInputChannels"] == 2:
@@ -58,22 +56,23 @@ def capture_audio():
 
         audio = audio.astype(np.float32) / 32768.0
 
-        audio_queue.put(audio)
+        await audio_queue.put(audio)
 
 
-def transcribe_loop():
+async def transcribe_loop():
     buffer = []
     samples_per_buffer = 16000 * BUFFER_SECONDS
 
     while True:
-        chunk = audio_queue.get()
+        chunk = await audio_queue.get()
         buffer.extend(chunk)
 
         if len(buffer) >= samples_per_buffer:
             audio_data = np.array(buffer[:samples_per_buffer])
             buffer = buffer[samples_per_buffer:]
 
-            segments, info = model.transcribe(
+            segments, info = await asyncio.to_thread(
+                model.transcribe,
                 audio_data,
                 language="ja",
                 beam_size=5
@@ -81,22 +80,13 @@ def transcribe_loop():
 
             for segment in segments:
                 print("Transcript:", segment.text)
-                transcript_queue.put(segment.text)
+                await transcript_queue.put(segment.text)
 
 
-def tokenize():
-    tokens = []
-    while True:
-        text = transcript_queue.get()
-        for word in tagger(text):
-            tokens.append({
-                "surface": word.surface,
-                "lemma": word.feature.lemma,
-                "pos": word.feature.pos1
-            })
 
-
-threading.Thread(target=capture_audio, daemon=True).start()
-threading.Thread(target=tokenize, daemon=True).start()
-
-transcribe_loop()
+async def start_threads():
+    await asyncio.gather(
+        capture_audio(),
+        transcribe_loop()
+    )
+    
