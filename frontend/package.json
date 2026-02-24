@@ -1,6 +1,6 @@
 {
   "name": "honyaku",
-  "description": "Real-time Japanese audio translator",
+  "description": "Real-time Japanese translator",
   "keywords": [
     "electron",
     "boilerplate",
@@ -12,6 +12,10 @@
     "hot",
     "reload"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/honyaku/honyaku.git"
+  },
   "main": "./.erb/dll/main.bundle.dev.js",
   "scripts": {
     "build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
@@ -219,12 +223,9 @@
     ],
     "publish": {
       "provider": "github",
-      "owner": "honyaku",
+      "owner": "jaxsonsprinkles",
       "repo": "honyaku"
     }
-  },
-  "collective": {
-    "url": "https://opencollective.com/honyaku-594"
   },
   "devEngines": {
     "runtime": {
