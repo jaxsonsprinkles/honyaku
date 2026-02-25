@@ -8,20 +8,21 @@ import asyncio
 CHUNK_SIZE = 4800
 BUFFER_SECONDS = 3
 
+p = pyaudio.PyAudio()
 
 model = WhisperModel("base", device="cpu", compute_type="int8")
 
 try:
-    wasapi_info = pyaudio.PyAudio().get_host_api_info_by_type(pyaudio.paWASAPI)
+    wasapi_info = p.get_host_api_info_by_type(pyaudio.paWASAPI)
 except OSError:
     print("WASAPI not available.")
     exit()
 
-default_speakers = pyaudio.PyAudio().get_device_info_by_index(
+default_speakers = p.get_device_info_by_index(
     wasapi_info["defaultOutputDevice"])
 
 if not default_speakers["isLoopbackDevice"]:
-    for loopback in pyaudio.PyAudio().get_loopback_device_info_generator():
+    for loopback in p.get_loopback_device_info_generator():
         if default_speakers["name"] in loopback["name"]:
             default_speakers = loopback
             break
@@ -31,7 +32,7 @@ if not default_speakers["isLoopbackDevice"]:
 
 sample_rate = int(default_speakers["defaultSampleRate"])
 
-stream = pyaudio.PyAudio().open(
+stream = p.open(
     format=pyaudio.paInt16,
     channels=default_speakers["maxInputChannels"],
     rate=sample_rate,
@@ -83,10 +84,8 @@ async def transcribe_loop():
                 await transcript_queue.put(segment.text)
 
 
-
 async def start_threads():
     await asyncio.gather(
         capture_audio(),
         transcribe_loop()
     )
-    

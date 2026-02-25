@@ -7,9 +7,11 @@ import json
 
 tagger = Tagger()
 
+
 async def handler(websocket):
-    tokens = []
+
     while True:
+        tokens = []
         text = await transcript_queue.get()
         for word in tagger(text):
             tokens.append({
@@ -19,12 +21,13 @@ async def handler(websocket):
             })
         await websocket.send(json.dumps({"tokens": tokens}))
 
+
 async def main():
 
     asyncio.create_task(start_threads())
 
     async with serve(handler, "localhost", 8765) as server:
         await asyncio.sleep(float('inf'))
-    
+
 if __name__ == "__main__":
     asyncio.run(main())
