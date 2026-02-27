@@ -1,6 +1,7 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import { useEffect, useRef, useState } from 'react';
+import splash from '../../assets/splash.png';
 function Main() {
   const ws = useRef<WebSocket>(null);
   const [connected, setConnected] = useState<Boolean>(false);
@@ -65,7 +66,7 @@ function Main() {
   return (
     <div className="min-h-screen flex items-center justify-center text-gray-800">
       <div className="text-center space-y-6">
-        <h1 className="text-5xl font-bold">翻訳 (Honyaku)</h1>
+        <img src={splash} alt="Honyaku" />
         <div className="flex flex-col gap-4 justify-center">
           <div className="flex flex-col mx-auto gap-4 justify-center">
             <p
