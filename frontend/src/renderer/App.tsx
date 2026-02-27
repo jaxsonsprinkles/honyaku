@@ -8,67 +8,49 @@ function Main() {
   const [tokens, setTokens] = useState<any>({
     tokens: [
       {
-        surface: '\u306a\u3044',
-        lemma: '\u7121\u3044',
-        pos: '\u5f62\u5bb9\u8a5e',
+        surface: '\u307f\u3093\u306a',
+        lookup:
+          '{"word":"\u307f\u3093\u306a","entries":[{"id":1202150,"rank":0,"kana":["\u307f\u306a","\u307f\u3093\u306a"],"kanji":["\u7686","\u7686\u3093\u306a"],"senses":[{"order":0,"pos":"noun (common) (futsuumeishi), pronoun, adverb (fukushi)","gloss":"everyone, everybody, all"},{"order":1,"pos":"noun (common) (futsuumeishi), adverb (fukushi)","gloss":"everything, all"}]}],"kanji":[],"jlpt_vocab":{"id":1647,"level":3,"kanji":"\u7686","hiragana":"\u307f\u3093\u306a","english":"all,everyone,everybody"},"jlpt_kanji_levels":{},"jlpt_grammar":[],"examples":[{"id":4732,"text":"\u307f\u3093\u306a\u3082\u305d\u3046\u306a\u306e\u304b\u306a\u3001\u3068\u601d\u3046\u3053\u3068\u304f\u3089\u3044\u3057\u304b\u3067\u304d\u306a\u3044\u3002"},{"id":4820,"text":"\u306a\u305c\u307f\u3093\u306a\u304c\u79c1\u306e\u3053\u3068\u3092\u6c17\u9055\u3044\u3060\u3068\u601d\u3046\u306e\u304b\u3001\u9042\u306b\u8aac\u660e\u3057\u3066\u304f\u308c\u3066\u3042\u308a\u304c\u3068\u3046\u3002"},{"id":4885,"text":"\u307f\u3093\u306a\u3042\u306a\u305f\u306b\u4f1a\u3044\u305f\u304c\u3063\u3066\u308b\u3002\u3042\u306a\u305f\u306f\u6709\u540d\u306a\u306e\u3088\uff01"},{"id":4970,"text":"\u305d\u308c\u3089\u306f\u307f\u3093\u306a\u540c\u3058\u304b\u3044\uff1f"},{"id":74473,"text":"\u50d5\u306b\u306f\u8b66\u5bdf\u3088\u308a\u3082\u4f55\u3088\u308a\u3082\u307f\u3093\u306a\u304c\u3044\u3066\u304f\u308c\u308b\u3053\u3068\u306e\u65b9\u304c\u5fc3\u5f37\u3044\u306e\u3067\u3059\u3088\u3002"},{"id":74480,"text":"\u541b\u306e\u5b9f\u529b\u306a\u3089\u697d\u52dd\u3060\u3068\u306f\u601d\u3046\u304c\u3001\u305d\u308c\u306b\u9a55\u3089\u305a\u3001\u307e\u305a\u306f\u30af\u30e9\u30b9\u306e\u307f\u3093\u306a\u3068\u5207\u78cb\u7422\u78e8\u3057\u3066\u3044\u3063\u3066\u6b32\u3057\u3044\u3002"},{"id":75217,"text":"\u3042\u3001\u307f\u3093\u306a\u306b\u306f\u5185\u7dd2\u3060\u3088\uff1f\u5bee\u3092\u591c\u4e2d\u306b\u629c\u3051\u51fa\u3059\u306e\u306f\u53b3\u7f70\u3060\u304b\u3089\u306d\uff1f"},{"id":75946,"text":"\u9759\u304b\u306b\uff01\u307f\u3093\u306a\u305d\u306e\u5834\u3092\u52d5\u304b\u306a\u3044\u3067\u3002\u3053\u308c\u304b\u3089\u6301\u3061\u7269\u691c\u67fb\u3092\u306f\u3058\u3081\u307e\u3059\u3002"},{"id":76210,"text":"\u6075\u5b50\u3055\u3093\u304c\u826f\u304f\u3066\u3082\u307f\u3093\u306a\u304c\u7d0d\u5f97\u3057\u306a\u3044\u3093\u3067\u3059\u3002\u5f8c\u3067\u4ffa\u304c\u30c9\u30e4\u3055\u308c\u308b\u3093\u3060\u304b\u3089\u3002"},{"id":76350,"text":"\u4e00\u4eba\u306f\u307f\u3093\u306a\u306e\u70ba\u306b\u3001\u307f\u3093\u306a\u306f\u4e00\u4eba\u306e\u70ba\u306b\u3002\u305d\u308c\u304c\u30c1\u30fc\u30e0\u30d7\u30ec\u30a4\u3060\u3002"},{"id":76398,"text":"\u307f\u3093\u306a\u3001\u4ffa\u3082\u5168\u529b\u3067\u30d5\u30a9\u30ed\u30fc\u3059\u308b\u3002\u3053\u306e\u30a4\u30d9\u30f3\u30c8\u304b\u306a\u3089\u305a\u6210\u529f\u3055\u305b\u308b\u305e\u3002"},{"id":76475,"text":"\u30cf\u30f3\u30d7\u30c6\u30a3\u30c0\u30f3\u30d7\u30c6\u30a3\u3001\u58c1\u306e\u4e0a\u306b\u5ea7\u3063\u3066\u3001\u30cf\u30f3\u30d7\u30c6\u30a3\u30c0\u30f3\u30d7\u30c6\u30a3\u3001\u30c9\u30b7\u30f3\u3068\u843d\u3061\u305f\u3002\u738b\u69d8\u306e\u99ac\u306e\u307f\u3093\u306a\u3082\u738b\u69d8\u306e\u5bb6\u6765\u306e\u307f\u3093\u306a\u3082\u30cf\u30f3\u30d7\u30c6\u30a3\u3092\u5143\u306b\u623b\u305b\u306a\u304b\u3063\u305f\u3002"},{"id":76514,"text":"\u3068\u3063\u3066\u3082\u3044\u3044\u4f1a\u793e\u3067\u3059\u3088\u3002\u793e\u9577\u306f\u51c4\u8155\u3060\u3057\u3001\u793e\u54e1\u306f\u307f\u3093\u306a\u4e00\u751f\u61f8\u547d\u3060\u3088\u3002"},{"id":76544,"text":"\u3067\u30fc\u304d\u305f\uff01\u3042\u3068\u306f\u307f\u3093\u306a\u304c\u6765\u308b\u307e\u3067\u3001\u6cb8\u9a30\u3057\u306a\u3044\u3088\u3046\u306b\u5f31\u706b\u306b\u3057\u3066\u3063\u3068\u3002"},{"id":76675,"text":"\u30b8\u30e3\u30fc\u30f3\u3002\u305d\u308c\u3058\u3083\u6625\u7530\u304f\u3093\u3001\u3082\u3046\u898b\u3066\u3082\u3044\u3044\u308f\u3088\u3002\u307f\u3093\u306a\u306e\u6d74\u8863\u3001\u304a\u62ab\u9732\u76ee\u306d\u3047\uff5e\u3002"},{"id":77045,"text":"\u300c\u304a\u304b\u3057\u3044\u3088\u306d\u3002\u4e88\u5b9a\u3067\u306f\u4eca\u9803\u307f\u3093\u306a\uff35\uff26\uff2f\u3092\u76ee\u6483\u3057\u3066\u3001\u4e00\u4e38\u3068\u306a\u3063\u3066\u7814\u7a76\u3057\u3066\u308b\u306f\u305a\u3060\u3063\u305f\u3093\u3060\u3051\u3069\u3055\u300d\u300c\u76ee\u6483\u304b\u3089\u3057\u3066\u30a2\u30ea\u30a8\u30cd\u30fc\u300d"},{"id":77438,"text":"\u604b\u611b\u306f\u3001\u306f\u3057\u304b\u306e\u3088\u3046\u306a\u3082\u306e\u3060\u3002\u307f\u3093\u306a\u4e00\u5ea6\u306f\u304b\u304b\u3089\u306a\u3051\u308c\u3070\u306a\u3089\u306a\u3044\u3002"},{"id":77565,"text":"\u5217\u8eca\u304c\u505c\u6b62\u3057\u305f\u306e\u3067\u3001\u4e57\u5ba2\u306f\u307f\u3093\u306a\u3069\u3046\u3057\u305f\u306e\u304b\u3068\u601d\u3063\u305f\u3002"},{"id":78167,"text":"\u65c5\u884c\u306b\u51fa\u308b\u6642\u5f7c\u3089\u306f\u307f\u3093\u306a\u5143\u6c17\u4e00\u676f\u3060\u3063\u305f\u3002"},{"id":78277,"text":"\u7acb\u3063\u3066\u3044\u308b\u306e\u306f\u3001\u307f\u3093\u306a\u7537\u3060\u3063\u305f\u3002"},{"id":78879,"text":"\u6d0b\u5b50\u306f\u307f\u3093\u306a\u304c\u3073\u3063\u304f\u308a\u3059\u308b\u3088\u3046\u306a\u512a\u96c5\u3055\u3067\u8e0a\u3063\u305f\u3002"},{"id":79101,"text":"\u5915\u98df\u306e\u5f8c\u3001\u79c1\u305f\u3061\u306f\u307f\u3093\u306a\u5fdc\u63a5\u5ba4\u306b\u884c\u3063\u305f\u3002"},{"id":79329,"text":"\u53cb\u9054\u304c\u307f\u3093\u306a\u5bb6\u3078\u5e30\u3063\u3066\u5f7c\u5973\u306f\u3055\u3073\u3057\u304b\u3063\u305f\u3002"},{"id":79330,"text":"\u53cb\u9054\u304c\u307f\u3093\u306a\u3001\u304c\u3093\u3070\u308c\u3068\u52c7\u6c17\u3065\u3051\u3066\u304f\u308c\u305f\u3002"},{"id":79413,"text":"\u52c7\u6c17\u304c\u307f\u3093\u306a\u306b\u6c42\u3081\u3089\u308c\u3066\u3044\u308b\u3002"},{"id":79523,"text":"\u7d04\u675f\u3092\u5b88\u3089\u306a\u3044\u3068\u3001\u307f\u3093\u306a\u304b\u3089\u76f8\u624b\u306b\u3055\u308c\u306a\u304f\u306a\u308b\u305e\u3002"},{"id":80107,"text":"\u6728\u306e\u8449\u306f\u307f\u3093\u306a\u843d\u3061\u3066\u3057\u307e\u3063\u305f\u3002"},{"id":80108,"text":"\u6728\u306e\u8449\u306f\u307b\u3068\u3093\u3069\u307f\u3093\u306a\u843d\u3061\u3066\u3057\u307e\u3063\u305f\u3002"},{"id":80616,"text":"\u660e\u65e5\u304b\u3089\uff15\u9023\u4f11\u3060\u304b\u3089\u3001\u307f\u3093\u306a\u30eb\u30f3\u30eb\u30f3\u6c17\u5206\u3060\u306d\u3002"},{"id":80819,"text":"\u540d\u306e\u3042\u308b\u4eba\u305f\u3061\u306f\u307f\u3093\u306a\u30ec\u30bb\u30d7\u30b7\u30e7\u30f3\u306b\u51fa\u5e2d\u3057\u3066\u3044\u305f\u3002"},{"id":82020,"text":"\u50d5\u306f\u307f\u3093\u306a\u306b\u9006\u3089\u3063\u3066\u6b69\u3044\u305f\u3002"},{"id":82021,"text":"\u50d5\u306f\u307f\u3093\u306a\u3068\u4ef2\u826f\u304f\u3084\u3063\u3066\u3044\u308b\u3002"},{"id":82667,"text":"\u6cd5\u5f8b\u306b\u5f93\u3046\u306e\u306f\u307f\u3093\u306a\u306e\u7fa9\u52d9\u3060\u3002"},{"id":83197,"text":"\u6b69\u54e8\u306f\u307f\u3093\u306a\u306b\u5408\u3044\u8a00\u8449\u3092\u8a00\u308f\u305b\u305f\u3002"},{"id":84939,"text":"\u5bcc\u58eb\u5c71\u306f\u307f\u3093\u306a\u306b\u77e5\u3089\u308c\u3066\u3044\u308b\u3002"},{"id":86359,"text":"\u5f7c\u5973\u306f\u6765\u305f\u4eba\u307f\u3093\u306a\u306b\u611b\u5b0c\u3092\u3075\u308a\u307e\u3044\u305f\u3002"},{"id":86665,"text":"\u5f7c\u5973\u306f\u672c\u5f53\u306b\u79c1\u305f\u3061\u307f\u3093\u306a\u304c\u8cde\u8cdb\u3059\u308b\u3088\u3046\u306a\u6559\u5e2b\u3067\u3059\u3002"},{"id":87100,"text":"\u5f7c\u5973\u306f\u7f8e\u3057\u3044\u3060\u3051\u3067\u306a\u304f\u3001\u307f\u3093\u306a\u306b\u512a\u3057\u3044\u3002"},{"id":87101,"text":"\u5f7c\u5973\u306f\u7f8e\u3057\u3044\u304b\u3089\u3067\u306f\u306a\u304f\u307f\u3093\u306a\u306b\u89aa\u5207\u3060\u304b\u3089\u4eba\u6c17\u304c\u3042\u308b\u3002"},{"id":87361,"text":"\u5f7c\u5973\u306f\u5f7c\u306e\u3053\u3068\u3092\u3001\u4ed6\u306e\u307f\u3093\u306a\u304c\u77e5\u3063\u3066\u3044\u305f\u3088\u308a\u3082\u3001\u3088\u304f\u77e5\u3063\u3066\u3044\u305f\u3002"},{"id":88945,"text":"\u5f7c\u5973\u306f\u81ea\u5206\u3092\u652f\u3048\u3066\u304f\u308c\u305f\u4eba\u307f\u3093\u306a\u306b\u611f\u8b1d\u306e\u610f\u3092\u8868\u3057\u305f\u3002"},{"id":88977,"text":"\u5f7c\u5973\u306f\u81ea\u5206\u306e\u670d\u3092\u307f\u3093\u306a\u4eba\u306b\u3084\u3063\u3066\u3057\u307e\u3063\u305f\u3002"},{"id":89615,"text":"\u5f7c\u5973\u306f\u79c1\u305f\u3061\u307f\u3093\u306a\u9a5a\u304b\u305b\u308b\u307b\u3069\u512a\u7f8e\u306b\u8e0a\u3063\u305f\u3002"},{"id":89616,"text":"\u5f7c\u5973\u306f\u79c1\u305f\u3061\u307f\u3093\u306a\u306b\u7d20\u6575\u306a\u3054\u99b3\u8d70\u3092\u4f5c\u3063\u3066\u304f\u308c\u305f\u3002"},{"id":90419,"text":"\u5f7c\u5973\u306f\u8fd1\u6240\u306e\u7537\u9054\u3092\u307f\u3093\u306a\u5f15\u304d\u4ed8\u3051\u305f\u3002"},{"id":91135,"text":"\u5f7c\u5973\u306f\u4e00\u751f\u61f8\u547d\u52c9\u5f37\u3057\u3066\u3001\u30af\u30e9\u30b9\u306e\u307f\u3093\u306a\u306b\u8ffd\u3044\u3064\u304b\u306d\u3070\u306a\u3089\u306a\u3044\u3002"},{"id":91418,"text":"\u5f7c\u5973\u306f\u307f\u3093\u306a\u3092\u3046\u3093\u3056\u308a\u3055\u305b\u307e\u3059\u3002"},{"id":91419,"text":"\u5f7c\u5973\u306f\u307f\u3093\u306a\u306e\u305f\u3081\u306b\u6599\u7406\u3092\u3057\u306a\u3051\u308c\u3070\u306a\u3089\u306a\u3044\u3067\u3057\u3087\u3046\u3002"},{"id":91420,"text":"\u5f7c\u5973\u306f\u307f\u3093\u306a\u306b\u8ffd\u3044\u3064\u3053\u3046\u3068\u901f\u304f\u6b69\u3044\u305f\u3002"},{"id":91421,"text":"\u5f7c\u5973\u306f\u307f\u3093\u306a\u306b\u77e5\u3089\u308c\u3066\u3044\u308b\u3002"}]}',
       },
-      { surface: '\u3088', lemma: '\u3088', pos: '\u52a9\u8a5e' },
-      { surface: '\u3001', lemma: '\u3001', pos: '\u88dc\u52a9\u8a18\u53f7' },
-      {
-        surface: '\u597d\u304d',
-        lemma: '\u597d\u304d',
-        pos: '\u5f62\u72b6\u8a5e',
-      },
-      { surface: '\u3068', lemma: '\u3068', pos: '\u52a9\u8a5e' },
-      { surface: '\u304b', lemma: '\u304b', pos: '\u52a9\u8a5e' },
-      { surface: '\u305d\u3046', lemma: '\u305d\u3046', pos: '\u526f\u8a5e' },
-      { surface: '\u3044\u3046', lemma: '\u8a00\u3046', pos: '\u52d5\u8a5e' },
-      { surface: '\u306e', lemma: '\u306e', pos: '\u52a9\u8a5e' },
     ],
   });
-  const cache = new Map();
-
-  const lookupWord = async (word: any) => {
-    if (cache.has(word)) {
-      return cache.get(word);
-    }
-
-    try {
-      const response = await fetch(
-        `https://api.mojidict.com/v1/words/${encodeURIComponent(word)}`,
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP Error with status ${response.status}`);
-      }
-
-      const data = await response.json();
-      cache.set(word, data);
-      return data;
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   useEffect(() => {
     const socket = new WebSocket('ws://localhost:8765');
     socket.onopen = () => {
+      console.log('Connected');
       setConnected(true);
     };
 
     socket.onmessage = (event) => {
       console.log('Message:', event.data);
-      setTokens(event.data);
+      const data = JSON.parse(event.data);
+      setTokens(data);
     };
+
+    socket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+      setConnected(false);
+    };
+
+    socket.onclose = () => {
+      console.log('Disconnected');
+      setConnected(false);
+    };
+
     ws.current = socket;
-  });
+
+    return () => {
+      socket.close();
+    };
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center text-gray-800">
       <div className="text-center space-y-6">
-        <img src={splash} alt="Honyaku" />
+        <img src={splash} alt="Honyaku" width={500} height={250} />
         <div className="flex flex-col gap-4 justify-center">
-          <div className="flex flex-col mx-auto gap-4 justify-center">
+          <div className="flex flex-row mx-auto gap-2 justify-center">
             <p
               className={`flex items-center gap-2 ${connected ? 'text-success' : 'text-error'}`}
             >
@@ -82,22 +64,40 @@ function Main() {
               </span>
               {connected ? 'Connected' : 'Not Connected'}
             </p>
+            <button
+              className="btn btn-sm"
+              onClick={() => window.location.reload()}
+              aria-label="Refresh window"
+            >
+              Refresh
+            </button>
           </div>
 
-          <p>
+          <div>
             {tokens.tokens.map((token: any, i: number) => {
+              const lookup = JSON.parse(token.lookup);
+              console.log(lookup);
               return (
-                <div
-                  className="tooltip"
-                  data-tip={JSON.stringify(lookupWord(token))}
-                >
-                  <span key={i} className="bg-base-300 rounded-md m-1 p-1">
+                <div key={i} className="tooltip">
+                  <div className="tooltip-content">
+                    <div>
+                      <h1 className="text-xl font-bold">
+                        {JSON.parse(`"${lookup.word}"`)}
+                      </h1>
+                      <p>{lookup.entries[0].kana[0]}</p>
+                      <ul className="list-disc pl-5 text-left text-sm">
+                        <li>{lookup.entries[0].senses[0].gloss}</li>
+                        <li>{lookup.examples[0].text}</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <span className="bg-base-300 rounded-md m-1 p-1">
                     {JSON.parse(`"${token.surface}"`)}
                   </span>
                 </div>
               );
             })}
-          </p>
+          </div>
         </div>
       </div>
     </div>

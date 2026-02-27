@@ -14,13 +14,6 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import { spawn } from 'child_process';
-
-let pythonProcess: any = null;
-
-const runServer = () => {
-  pythonProcess = spawn('python', ['../../backend/server.py']);
-};
 
 class AppUpdater {
   constructor() {
@@ -128,14 +121,16 @@ app.on('window-all-closed', () => {
   // after all windows have been closed
   if (process.platform !== 'darwin') {
     app.quit();
-    pythonProcess.kill();
   }
 });
-
+function reloadWindow() {
+  if (mainWindow && mainWindow.webContents) {
+    mainWindow.webContents.reload();
+  }
+}
 app
   .whenReady()
   .then(() => {
-    runServer();
     createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the

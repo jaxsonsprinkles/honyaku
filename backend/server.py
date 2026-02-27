@@ -3,10 +3,10 @@ from websockets.asyncio.server import serve
 from recording import start_threads, transcript_queue
 from fugashi import Tagger
 import json
-
+from kotobase import Kotobase
 
 tagger = Tagger()
-
+kb = Kotobase()
 
 async def handler(websocket, path=None):
     print("Websocket connection started")
@@ -17,8 +17,7 @@ async def handler(websocket, path=None):
         for word in tagger(text):
             tokens.append({
                 "surface": word.surface,
-                "lemma": word.feature.lemma,
-                "pos": word.feature.pos1
+                "lookup": kb.lookup(word.surface).to_json()
             })
         print("Sending")
         await websocket.send(json.dumps({"tokens": tokens}))
@@ -33,3 +32,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
