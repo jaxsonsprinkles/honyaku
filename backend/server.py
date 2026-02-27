@@ -8,10 +8,11 @@ import json
 tagger = Tagger()
 
 
-async def handler(websocket):
-
+async def handler(websocket, path=None):
+    print("Websocket connection started")
     while True:
         tokens = []
+        print("Waiting for transcription")
         text = await transcript_queue.get()
         for word in tagger(text):
             tokens.append({
@@ -19,6 +20,7 @@ async def handler(websocket):
                 "lemma": word.feature.lemma,
                 "pos": word.feature.pos1
             })
+        print("Sending")
         await websocket.send(json.dumps({"tokens": tokens}))
 
 
