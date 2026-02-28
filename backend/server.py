@@ -8,6 +8,7 @@ from kotobase import Kotobase
 tagger = Tagger()
 kb = Kotobase()
 
+
 async def handler(websocket, path=None):
     print("Websocket connection started")
     while True:
@@ -20,7 +21,7 @@ async def handler(websocket, path=None):
                 "lookup": kb.lookup(word.surface).to_json()
             })
         print("Sending")
-        await websocket.send(json.dumps({"tokens": tokens}))
+        await websocket.send(json.dumps(tokens))
 
 
 async def main():
@@ -32,4 +33,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-
