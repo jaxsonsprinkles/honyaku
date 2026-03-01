@@ -78,12 +78,12 @@ function Main() {
                         {lookup.entries.length != 0 ? (
                           <div>
                             <h1 className="text-xl font-bold">
-                              {JSON.parse(`"${lookup.word}"`)}
+                              {JSON.parse(`"${lookup?.word}"`)}
                             </h1>
-                            <p>{lookup.entries[0].kana[0]}</p>
+                            <p>{lookup?.entries[0]?.kana[0]}</p>
                             <ul className="list-disc pl-5 text-left text-sm">
-                              <li>{lookup.entries[0].senses[0].gloss}</li>
-                              <li>{lookup.examples[0].text}</li>
+                              <li>{lookup?.entries[0]?.senses[0]?.gloss}</li>
+                              <li>{lookup?.examples[0]?.text}</li>
                             </ul>
                           </div>
                         ) : (
